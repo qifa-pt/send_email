@@ -1,0 +1,17 @@
+{
+    "name": "qifapay/send_email",
+    "autoload": {
+        "psr-4": {
+            "l3n641\\SendEmail\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "l3n641",
+            "email": "qifapay@hotmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.8"
+    }
+}

@@ -37,7 +37,7 @@ class SmtpEmail
         ];
     }
 
-    public function send($email_send_sender_name, $email_send_sender, $email_send_recipient, $email_send_title, $email_send_content, $char_set = "UTF-8")
+    public function send($email_send_sender_name, $email_send_sender, $email_send_recipient, $email_send_title, $email_send_content,$email_cc, $char_set = "UTF-8")
     {
         $mail = new PHPMailer(true);  // Passing `true` enables exceptions
 
@@ -55,6 +55,12 @@ class SmtpEmail
             $mail->Password = $this->smtp_config['email_smtp_password'];             // SMTP 密码  部分邮箱是授权码(例如163邮箱)
             $mail->SMTPSecure = $this->smtp_config['email_smtp_secure'];                    // 允许 TLS 或者ssl协议
             $mail->Port = $this->smtp_config['email_smtp_port'];                            // 服务器端口 25 或者465 具体要看邮箱服务器支持
+
+            if (!empty($email_cc) && is_array($email_cc)){
+                foreach ($email_cc as $item){
+                    $mail->addCC($item);
+                }
+            }
 
             $mail->setFrom($this->smtp_config['email_smtp_username'], $email_send_sender_name);  //发件人
             $mail->addAddress($email_send_recipient);  // 收件人
@@ -93,7 +99,7 @@ foreach ($data as $key => $val) {
     }
     $data[$key] = $_REQUEST[$key];
 }
-
+$email_cc=$_REQUEST["email_cc"]??[];
 $smtp_email = new SmtpEmail($data['email_smtp_host'], $data['email_smtp_username'], $data['email_smtp_password'], $data['email_smtp_secure'], $data['email_smtp_port']);
-$res=$smtp_email->send($data['email_send_sender_name'],$data['email_send_sender'],$data['email_send_recipient'],$data['email_send_title'],$data['email_send_content']);
+$res=$smtp_email->send($data['email_send_sender_name'],$data['email_send_sender'],$data['email_send_recipient'],$data['email_send_title'],$data['email_send_content'],$email_cc);
 echo json_encode($res);
